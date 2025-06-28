@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+{% load static %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+{% block title %}Receipt{% endblock %}
+
+{% block body %}
+<style>
+    .receipt-container {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        padding: 20px;
+        max-width: 700px;
+        margin: auto;
+        font-family: 'Courier New', Courier, monospace;
+    }
+
+    h2, h4, h5 {
+        color: #333;
+        font-weight: bold;
+    }
+
+    .header-section, .footer-section {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .details-section {
+        border-bottom: 1px solid #ddd;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+    }
+
+    .details-section p {
+        margin: 2px 0;
+        font-size: 14px;
+    }
+
+    .row {
+        margin-bottom: 10px;
+    }
+
+    .total-section {
+        font-weight: bold;
+        border-top: 2px dashed #333;
+        padding-top: 15px;
+    }
+
+    .btn-print {
+        font-size: 16px;
+        margin-top: 15px;
+    }
+
+    /* Print styles */
+    @media print {
+        body * {
+            visibility: hidden;
+        }
+
+        .receipt-container, .receipt-container * {
+            visibility: visible;
+        }
+
+        .receipt-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 0; /* Remove extra padding to fit better on a page */
+            margin: 0; /* Remove margin for print */
+        }
+
+        .header-section, .footer-section {
+            margin: 0 auto; /* Center the sections */
+        }
+
+        .btn-print, .btn-success {
+            display: none; /* Hide print and payment buttons in print view */
+        }
+
+        /* Ensure the whole slip fits neatly in one printed page */
+        @page {
+            margin: 0; /* Remove default margins on the page */
+        }
+    }
+</style>
+
+<div class="receipt-container">
+    <div class="header-section">
+        <h2>Wheels-on-go Rental Service</h2>
+        <h4>Booking Receipt</h4>
+        <p>{{ current_date }}</p>
+        <hr>
+    </div>
+
+    <div class="details-section">
+        <div class="row">
+            <div class="col-md-6">
+                <h5>Customer Details</h5>
+                <p><strong>Name:</strong> {{ customer_name }}</p>
+                <p><strong>Email:</strong> {{ email }}</p>
+                <p><strong>Phone:</strong> {{ phone }}</p>
+            </div>
+            <div class="col-md-6">
+                <h5>Booking Details</h5>
+                <p><strong>Car:</strong> {{ car_choice }}</p>
+                <p><strong>Color:</strong> {{ car_color }}</p>
+                <p><strong>Total Rent:</strong> ₹{{ total_rent }}</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <h5>Pickup Information</h5>
+                <p><strong>Pickup Location:</strong> {{ from_location }}</p>
+                <p><strong>Drop-off Location:</strong> {{ to_location }}</p>
+                <p><strong>Pickup Date:</strong> {{ pickup_date }}</p>
+                <p><strong>Rental Duration:</strong> {{ days }} days</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="total-section text-center">
+        <p><strong>Total Amount Due:</strong> ₹{{ total_rent }}</p>
+    </div>
+
+    <div class="text-center">
+        <button class="btn btn-primary btn-print" onclick="window.print()">Print Receipt</button>
+
+        <!-- Razorpay payment button -->
+        <a href="#" id="rzp-button" class="btn btn-success" data-total-rent="{{ total_rent }}">
+            Proceed to Payment
+        </a>
+    </div>
+
+    <div class="footer-section">
+        <hr>
+        <p>Thank you for choosing our service!</p>
+        <p>&copy; {{ current_year }} wheels-On-Go Rental Service. All rights reserved.</p>
+    </div>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    const button = document.getElementById('rzp-button');
+    button.addEventListener('click', function(e) {
+        e.preventDefault();
+
+        const totalRent = button.getAttribute('data-total-rent') * 100; // Convert to paise
+        fetch('/initiate-payment/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}',
+            },
+            body: JSON.stringify({ 'total_rent': totalRent / 100 }) // Amount in INR
+        })
+        .then(response => response.json())
+        .then(data => {
+            const options = {
+                "key": data.razorpay_key,
+                "amount": data.amount,
+                "currency": "INR",
+                "order_id": data.order_id,
+                "name": "Wheels-on-Go Rental Service",
+                "handler": function(response) {
+                    fetch('/payment-callback/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}',
+                        },
+                        body: JSON.stringify(response)
+                    })
+                    .then(res => res.json())
+                    .then(res => {
+                        if (res.success) {
+                            alert('Payment Successful!');
+                            window.location.href = '/thank-you/';  // Redirect to the thank-you page
+                        } else {
+                            alert('Payment Failed!');
+                        }
+                    });
+                }
+            };
+            const rzp = new Razorpay(options);
+            rzp.open();
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+
+{% block title %}Thank You for Your Payment!{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <!-- Thank You Header -->
+    <div class="text-center mb-4">
+        <h1 class="display-4 text-success">{{ payment_status }}</h1>
+        <p>{{ payment_message }}</p>
+    </div>
+
+    <!-- Booking Summary Section -->
+    <div class="card shadow-sm">
+        <div class="card-header text-white bg-primary">
+            <h4 class="text-center">Booking Receipt</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Customer Details</h5>
+                    <ul class="list-unstyled">
+                        <li><strong>Name:</strong> {{ customer_name }}</li>
+                        <li><strong>Email:</strong> {{ email }}</li>
+                        <li><strong>Phone:</strong> {{ phone }}</li>
+                    </ul>
+                </div>
+
+                <div class="col-md-6">
+                    <h5>Booking Details</h5>
+                    <ul class="list-unstyled">
+                        <li><strong>Car:</strong> {{ car_choice }} ({{ car_color }})</li>
+                        <li><strong>Pickup Location:</strong> {{ from_location }}</li>
+                        <li><strong>Drop-off Location:</strong> {{ to_location }}</li>
+                        <li><strong>Pickup Date:</strong> {{ pickup_date }}</li>
+                        <li><strong>Rental Duration:</strong> {{ days }} days</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Payment Details</h5>
+                    <ul class="list-unstyled">
+                        <li><strong>Total Rent:</strong> ₹{{ total_rent }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call to Action: Return to Home and Print Bill -->
+    <div class="text-center mt-4">
+        <a href="/" class="btn btn-primary btn-lg">Return to Home</a>
+        <!-- Print Bill Button -->
+        <button class="btn btn-info btn-lg ml-3" onclick="window.print();">Print Bill</button>
+    </div>
+
+    <!-- Footer Section -->
+    <footer class="text-center mt-5">
+        <p>Thank you for choosing Wheels-on-Go! We hope to see you again soon.</p>
+        <p>&copy; {{ current_year }} Wheels-on-Go Rental Service. All rights reserved.</p>
+    </footer>
+</div>
+
+<!-- Styles for Normal View -->
+<style>
+    .container {
+        max-width: 900px;
+    }
+
+    .card-header h4 {
+        margin-bottom: 0;
+    }
+
+    .list-unstyled li {
+        font-size: 1.1em;
+        color: #333;
+    }
+
+    footer p {
+        font-size: 1.1em;
+        color: #777;
+    }
+
+    .btn-info {
+        margin-left: 10px;
+    }
+
+    /* Print Styles */
+    @media print {
+        body * {
+            visibility: hidden;
+        }
+
+        .container, .container * {
+            visibility: visible;
+        }
+
+        .container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+        }
+
+        /* Hide all non-bill content (buttons, footer, etc.) */
+        .btn-info, .btn-primary, footer {
+            display: none;
+        }
+
+        /* Make the card look like an invoice */
+        .card {
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .card-header {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 0;
+            font-size: 1.5em;
+            text-align: center;
+        }
+
+        .list-unstyled li {
+            padding-bottom: 8px;
+        }
+
+        .list-unstyled li strong {
+            width: 150px;
+            display: inline-block;
+            font-weight: bold;
+        }
+
+        h5 {
+            font-size: 1.25em;
+            margin-bottom: 15px;
+        }
+
+        .card-body {
+            border-top: 2px solid #333;
+            padding-top: 15px;
+            margin-top: 10px;
+        }
+
+        /* Improve spacing between sections */
+        .row {
+            margin-bottom: 20px;
+        }
+
+        /* Ensure the bill content fits neatly on a printed page */
+        @page {
+            margin: 0;
+            padding: 0;
+        }
+
+    }
+</style>
+
+{% endblock %}

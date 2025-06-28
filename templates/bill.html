@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+{% load static %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="{% static 'style.css' %}">
+
+{% block title %}Booking Details{% endblock title %}
+
+{% block body %}
+<div class="container my-5">
+  <form method="POST" action="{% url 'order' %}">
+    {% csrf_token %}
+    
+    <h2 class="text-center my-4">Booking Details</h2>
+    
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label for="billname">Full Name:</label>
+        <input type="text" class="form-control" id="billname" name="billname" placeholder="Full Name" required>
+      </div>
+      <div class="form-group col-md-6">
+        <label for="billemail">Email:</label>
+        <input type="email" class="form-control" id="billemail" name="billemail" placeholder="name@gmail.com" required>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label for="billphone">Phone Number:</label>
+        <input type="tel" class="form-control" id="billphone" name="billphone" required>
+      </div>
+      <div class="form-group col-md-6">
+        <label for="billaddress">Address:</label>
+        <input type="text" class="form-control" id="billaddress" name="billaddress" placeholder="COEP" required>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-md-4">
+        <label for="billcity">City:</label>
+        <input type="text" class="form-control" id="billcity" name="billcity" required>
+      </div>
+      <div class="form-group col-md-4">
+        <label for="inputState">State:</label>
+        <select id="inputState" class="form-control" name="state" required>
+          <option selected disabled>Choose...</option>
+          <option>Maharashtra</option>
+          <option>Madhya Pradesh</option>
+          <option>Punjab</option>
+          <option>Delhi</option>
+          <option>Andhra Pradesh</option>
+          <option>Gujarat</option>
+          <option>Tamil Nadu</option>
+          <option>Kerala</option>
+          <option>Karnataka</option>
+        </select>
+      </div>
+      <div class="form-group col-md-4">
+        <label for="inputZip">Pin Code:</label>
+        <input type="text" class="form-control" id="inputZip" name="pin_code" required>
+      </div>
+    </div>
+
+    <h2 class="text-center my-4">Car Details</h2>
+
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label for="cars11">Car Chosen:</label>
+        <select id="cars11" name="cars11" class="form-control" required>
+          <option selected="selected" disabled>Choose...</option>
+          <option value="Renault">Renault</option>
+          <option value="Alto 800">Alto 800</option>
+          <option value="Innova Crysta">Innova Crysta</option>
+          <option value="Chevy Traverse">Chevy Traverse</option>
+          <option value="BMW X5">BMW X5</option>
+          <option value="Honda City">Honda City</option>
+          <option value="Mercedes Benz">Mercedes Benz</option>
+          <option value="Swift Dezire">Swift Dezire</option>
+          <option value="KIA">KIA</option>
+        </select>
+      </div>
+      <div class="form-group col-md-6">
+        <label for="color1">Color of the Car:</label>
+        <input type="text" class="form-control" id="car_color" name="car_color" placeholder="Enter Color" required>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label for="dayss">Days:</label>
+        <input type="number" class="form-control" id="dayss" name="dayss" required>
+      </div>
+      <div class="form-group col-md-6">
+        <label for="pickup_date">Pickup Date:</label>
+        <input type="date" class="form-control" id="pickup_date" name="pickup_date" required>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label for="fl">From Location:</label>
+        <input type="text" class="form-control" id="fl" name="fl" placeholder="Pickup Location" required>
+      </div>
+      <div class="form-group col-md-6">
+        <label for="tl">To Location:</label>
+        <input type="text" class="form-control" id="tl" name="tl" placeholder="Drop Location" required>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-lg btn-block">Book Now</button>
+  </form>
+</div>
+
+{% if total_rent %}
+<div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="receiptModalLabel">Receipt</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h3 class="text-center">Booking Receipt</h3>
+        <hr>
+        <ul class="list-group">
+          <li class="list-group-item"><strong>Name:</strong> {{ customer_name }}</li>
+          <li class="list-group-item"><strong>Email:</strong> {{ billemail }}</li>
+          <li class="list-group-item"><strong>Phone:</strong> {{ billphone }}</li>
+          <li class="list-group-item"><strong>Address:</strong> {{ billaddress }}</li>
+          <li class="list-group-item"><strong>City:</strong> {{ billcity }}</li>
+          <li class="list-group-item"><strong>Car Chosen:</strong> {{ car_choice }}</li>
+          <li class="list-group-item"><strong>Car Color:</strong> {{ car_color }}</li>
+          <li class="list-group-item"><strong>Days for Rent:</strong> {{ days }}</li>
+          <li class="list-group-item"><strong>Pickup Date:</strong> {{ pickup_date }}</li>
+          <li class="list-group-item"><strong>From Location:</strong> {{ from_location }}</li>
+          <li class="list-group-item"><strong>To Location:</strong> {{ to_location }}</li>
+          <li class="list-group-item"><strong>Total Rent:</strong> ₹{{ total_rent }}</li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="window.print();">Print Receipt</button>
+        <a href="{% url 'payment' %}" class="btn btn-success">Proceed to Payment</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function(){
+    $('#receiptModal').modal('show');
+  });
+</script>
+
+{% endif %}
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+{% endblock %}
