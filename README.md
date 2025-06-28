@@ -1,28 +1,64 @@
-# Car-Rental-System
-Car rental system using Django FrameWork.<br /> <br />
-User can login and rent a car and can download the bill generated.
+# Car Rental System - Wheel On Go
 
-## About Django : 
-Django is an MVT web framework that is used to build web applications.Django has an in-built administration interface which lets you handle your models, user/ group permissions and to manage users. With model interface in place, there is no need for a separate database administration program for all but advanced database functions.Django can check if an entered password is correct by running it through the hash function and comparing the output to the stored hash value.Internally, while it provides choices for almost any functionality you might want (e.g. several popular databases, templating engines, etc.), it can also be extended to use other components if needed.
+A Django-based web application for managing a car rental business. This project allows users to browse available vehicles, register, log in, book cars, and manage orders.
 
-## Tech Stack Used:
-* HTML
-* CSS
-* Python 
-* SQLITE3 (Default database of django)
+## Features
 
-## Project Demo : 
+- User registration and authentication
+- Browse and search available vehicles
+- Book cars for specific dates
+- View and manage orders
+- Admin panel for managing cars, orders, and users
 
+## Tech Stack
 
+- Python 3.x
+- Django 4.0.4
+- SQLite (default, can be changed)
+- HTML, CSS (Bootstrap), JavaScript
 
-https://user-images.githubusercontent.com/89544124/180066688-a8265b4c-d72c-46b7-985c-c1eb60456f33.mp4
+## Setup Instructions
 
+1. **Clone the repository:**
+   ```sh
+   git clone https://github.com/Priyanshu1561/Car-Rental-System-Wheel_On_Go.git
+   cd Car-Rental-System-Wheel_On_Go
+   ```
+2. **Create a virtual environment (optional but recommended):**
+   ```sh
+   python -m venv venv
+   venv\Scripts\activate  # On Windows
+   # or
+   source venv/bin/activate  # On macOS/Linux
+   ```
+3. **Install dependencies:**
+   ```sh
+   pip install -r requirements.txt
+   ```
+4. **Apply migrations:**
+   ```sh
+   python manage.py migrate
+   ```
+5. **Create a superuser (for admin access):**
+   ```sh
+   python manage.py createsuperuser
+   ```
+6. **Run the development server:**
+   ```sh
+   python manage.py runserver
+   ```
+7. **Access the app:**
+   - Open [http://127.0.0.1:8000/](http://127.0.0.1:8000/) in your browser.
+   - Admin panel: [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/)
 
-## Installation : 
-```
-* Clone the repository
-* Create Superuser (python manage.py createsuperuser) for accessing the admin portal
-* Type python manage.py runserver and run the program
-```
-## Author :
-* Christy Biju (https://github.com/ChristyBiju)
+## Folder Structure
+
+- `MyApp/` - Main Django app for car rental logic
+- `vehicles/` - Django project settings
+- `static/` - Static files (CSS, JS, images)
+- `media/` - Uploaded media files
+- `templates/` - HTML templates
+
+## License
+
+This project is for educational purposes.
